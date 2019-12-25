@@ -6,15 +6,15 @@ My implementation of AutoAugmentation and RandomAugmentation with cv2.
 You can download this repo to your project:
 ```
     cd /your/project
-    git clone https://github.com/CoinCheung/AutoAugment-opencv.git
+    git clone https://github.com/CoinCheung/AutoAugment_opencv.git
 ``` 
 and use it directly:
 ```python
-    from AutoAugment-opencv  import AutoAugment
-    from AutoAugment-opencv  import RandomAugment
+    from AutoAugment_opencv  import AutoAugment
+    from AutoAugment_opencv  import RandomAugment
 
     import cv2
-    img = cv2.imread('./AutoAugment-opencv/pic.jpg')
+    img = cv2.imread('./AutoAugment_opencv/pic.jpg')
 
     AA = AutoAugment()
     aa_auged = AA(img)
