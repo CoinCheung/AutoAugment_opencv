@@ -109,6 +109,6 @@ res/
 labels.py
 adj.md
 *png
-*jpg
+*JPEG
 infer.py
 randaugment_bak.py

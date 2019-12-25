@@ -1,8 +1,8 @@
 
 
 import numpy as np
-from functions import func_dict
-from parse_aug_args import ParseAugArgs
+from .functions import func_dict
+from .parse_aug_args import ParseAugArgs
 
 
 
@@ -23,9 +23,6 @@ class RandomAugment(object):
             args = self.args_parser(name, level)
             img = func_dict[name](img, *args)
         return img
-
-## TODO: check whether there is pro for the behavior of use each op or not
-## no, with prob is the method used by autoaugment
 
 
 if __name__ == '__main__':

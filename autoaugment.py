@@ -2,9 +2,8 @@
 
 import numpy as np
 import random
-from functions import func_dict
-from parse_aug_args import ParseAugArgs
-
+from .functions import func_dict
+from .parse_aug_args import ParseAugArgs
 
 
 
