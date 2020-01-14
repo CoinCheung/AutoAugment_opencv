@@ -3,6 +3,10 @@
 
 My implementation of AutoAugmentation and RandomAugmentation with cv2.
 
+<p align='center'>
+<img src='pic.jpg'>
+</p>
+
 You can download this repo to your project:
 ```
     cd /your/project
@@ -25,6 +29,3 @@ and use it directly:
 
 If you see any errors in this codebase, please be my guest to open an issue to correct me. Thanks !!
 
-<p align='center'>
-<img src='pic.jpg'>
-</p>
