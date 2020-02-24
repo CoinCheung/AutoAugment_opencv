@@ -25,7 +25,7 @@ def autocontrast_func(img, cutoff=0):
         n = ch.size
         cut = cutoff * n // 100
         if cut == 0:
-            high, low = ch.max(), ch.min()
+            high, low = ch.max().astype(np.int64), ch.min().astype(np.int64)
         else:
             hist = cv2.calcHist([ch], [0], None, [n_bins], [0, n_bins])
             low = np.argwhere(np.cumsum(hist) > cut)
@@ -259,15 +259,17 @@ if __name__ == '__main__':
     print(np.min(np.abs(out_pil - out_cv)))
 
     pth = './pic.jpg'
+    #  pth = './example.png'
     impil = Image.open(pth)
     imcv = cv2.imread(pth)
     t1 = time.time()
-    n_test = 100
+    n_test = 1
+    cutoff = 20
     for i in range(n_test):
-        out_cv = autocontrast_func(imcv, 20).astype(np.float32)
+        out_cv = autocontrast_func(imcv, cutoff).astype(np.float32)
     t2 = time.time()
     for i in range(n_test):
-        out_pil = np.array(ImageOps.autocontrast(impil, cutoff=20))[:, :, ::-1]
+        out_pil = np.array(ImageOps.autocontrast(impil, cutoff=cutoff))[:, :, ::-1]
     t3 = time.time()
     print('autocontrast')
     print('cv time: {}'.format(t2 - t1))
