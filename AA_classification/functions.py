@@ -151,6 +151,7 @@ def sharpness_func(img, factor):
     '''
     The differences the this result and PIL are all on the 4 boundaries, the center
     areas are same
+    This is only equals to PIL implementation when opencv is 3.4.2, the `filter2D` of 3.4.2 and 4.1.2 is different
     '''
     kernel = np.ones((3, 3), dtype=np.float32)
     kernel[1][1] = 5
