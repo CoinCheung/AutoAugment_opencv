@@ -57,5 +57,7 @@ If your task is object detection, you can use autoaugment for detection like thi
     aug_img, aug_bboxes = AA_det(img, bboxes)
 ```
 
+This implementation only matches PIL when the cv2 is 3.4.2, if it is 4.1.2, there will be slight difference.
+
 If you see any errors in this codebase, please be my guest to open an issue to correct me. Thanks !!
 
