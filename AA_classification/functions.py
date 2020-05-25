@@ -150,23 +150,31 @@ def brightness_func(img, factor):
 
 def sharpness_func(img, factor):
     '''
-    The differences the this result and PIL are all on the 4 boundaries, the center
-    areas are same
-    This is only equals to PIL implementation when opencv is 3.4.2, the `filter2D` of 3.4.2 and 4.1.2 is different
+    Implement according to PIL.ImageEnhance.Sharpness, the output is slightly different from the PIL implementation, the differences comes from two things: one is that pil and cv2 use different round methods, one is round() and other is floor(). The other is the boundary padding method, don not know what padding strategy that pil uses, but the differences mainly lies at the 4 boundaries.
+    Also note that the implementation of `filter2D` is different between opencv3.4.2 and opencv4.1.2, which will cause the result of opencv3.4.2 matches pil better than 4.1.2.
     '''
+    ## This fused the blending process into filter kernel to reduce overhead
     kernel = np.ones((3, 3), dtype=np.float32)
     kernel[1][1] = 5
     kernel /= 13
-    degenerate = cv2.filter2D(img, -1, kernel)
-    if factor == 0.0:
-        out = degenerate
-    elif factor == 1.0:
-        out = img
-    else:
-        out = img.astype(np.float32)
-        degenerate = degenerate.astype(np.float32)[1:-1, 1:-1, :]
-        out[1:-1, 1:-1, :] = degenerate + factor * (out[1:-1, 1:-1, :] - degenerate)
-        out = out.astype(np.uint8)
+    kernel = kernel * (1. - factor)
+    kernel[1][1] += factor
+    out = cv2.filter2D(img, -1, kernel)
+
+    ## original implementation
+    #  kernel = np.ones((3, 3), dtype=np.float32)
+    #  kernel[1][1] = 5
+    #  kernel /= 13
+    #  degenerate = cv2.filter2D(img, -1, kernel)
+    #  if factor == 0.0:
+    #      out = degenerate
+    #  elif factor == 1.0:
+    #      out = img
+    #  else:
+    #      out = img.astype(np.float32)
+    #      degenerate = degenerate.astype(np.float32)[1:-1, 1:-1, :]
+    #      out[1:-1, 1:-1, :] = degenerate + factor * (out[1:-1, 1:-1, :] - degenerate)
+    #      out = out.astype(np.uint8)
     return out
 
 
@@ -252,9 +260,9 @@ if __name__ == '__main__':
     pth = './pic.jpg'
     impil = Image.open(pth)
     imcv = cv2.imread(pth)
-    out_cv = sharpness_func(imcv, 0.3).astype(np.float32)
+    out_cv = sharpness_func(imcv, 1.0).astype(np.float32)[1:-1, 1:-1, :]
     sharp_pil = ImageEnhance.Sharpness(impil)
-    out_pil = np.array(sharp_pil.enhance(0.3))[:, :, ::-1].astype(np.float32)
+    out_pil = np.array(sharp_pil.enhance(1.0))[1:-1, 1:-1, ::-1].astype(np.float32)
     print('sharpness')
     print(np.sum(np.abs(out_pil - out_cv)))
     print(np.max(np.abs(out_pil - out_cv)))
