@@ -150,7 +150,7 @@ def brightness_func(img, factor):
 
 def sharpness_func(img, factor):
     '''
-    Implement according to PIL.ImageEnhance.Sharpness, the output is slightly different from the PIL implementation, the differences comes from two things: one is that pil and cv2 use different round methods, one is round() and other is floor(). The other is the boundary padding method, don not know what padding strategy that pil uses, but the differences mainly lies at the 4 boundaries.
+    Implement according to PIL.ImageEnhance.Sharpness, the output is slightly different from the PIL implementation, the differences comes from two things: one is that pil and cv2 use different round methods, one is round() and other is floor(). The other is the boundary padding method, pil remains original pixel values as border, while opencv uses different padding strategies.
     Also note that the implementation of `filter2D` is different between opencv3.4.2 and opencv4.1.2, which will cause the result of opencv3.4.2 matches pil better than 4.1.2.
     '''
     ## This fused the blending process into filter kernel to reduce overhead
@@ -160,6 +160,11 @@ def sharpness_func(img, factor):
     kernel = kernel * (1. - factor)
     kernel[1][1] += factor
     out = cv2.filter2D(img, -1, kernel)
+    # align border values as pil
+    out[0, :, :] = img[0, :, :]
+    out[-1, :, :] = img[-1, :, :]
+    out[:, 0, :] = img[-1, 0, :]
+    out[:, -1, :] = img[-1, -1, :]
 
     ## original implementation
     #  kernel = np.ones((3, 3), dtype=np.float32)
